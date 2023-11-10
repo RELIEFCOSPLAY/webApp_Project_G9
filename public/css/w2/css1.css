@@ -1,0 +1,25 @@
+/* # = id */
+/* . = class คือ การแชร์ id ร่วมกัน */
+
+.text-red {
+    color: pink;
+   
+}
+#text2 {
+    color: #059862;
+    background-color: #fff0b3;
+    border-radius: 10px;
+    /* margin: 16px;ขอบนอก */
+   /* padding: 16px; ขอบใน */
+
+   /* top - right - bottom - left */
+   padding: 8px 0 8px 8px;
+   font-size: 2rem;
+   font-weight: bold;
+   border: 2px solid #059862; /* ขอบของ border */
+   
+   
+}
+#text3 {
+    color: purple;
+}

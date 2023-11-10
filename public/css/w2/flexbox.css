@@ -1,0 +1,18 @@
+.container{
+    background-color: bisque;
+    padding: 1rem;
+}
+
+.container-center{
+    display: flex;
+    flex-direction: row;   /* ทำไห้เป็น row หรือ column */
+    justify-content: space-around; /* justify-content คล้ายๆ mainaxis ใน modile */
+
+}
+
+.container-column{
+    display: flex;
+    flex-direction: column;   /* ทำไห้เป็น row หรือ colum */
+    justify-content: center; /* justify-content คล้ายๆ mainaxis ใน modile */
+   align-items: center ;/* align-items คล้ายๆ croaxsi ใน modile */
+}

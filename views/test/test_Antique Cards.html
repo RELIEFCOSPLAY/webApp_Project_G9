@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antique Cards</title>
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="row">
+
+        <!-- Loop through the JSON data and generate cards -->
+        <script>
+            const antiqueData = JSON.parse(`[
+                {"title":"Antique 1","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit.","image":"/public/img/bg/Bocchirock.png","enable":false},
+                {"title":"Antique 2","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit.","image":"/public/img/bg/Bocchirock.png","enable":true},
+                {"title":"Antique 3","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit.","image":"/public/img/bg/Bocchirock.png","enable":true},
+                {"title":"Antique 4","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit.","image":"/public/img/bg/Bocchirock.png","enable":true},
+                {"title":"Antique 5","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit.","image":"/public/img/bg/Bocchirock.png","enable":true},
+                {"title":"Antique 6","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit.","image":"/public/img/bg/Bocchirock.png","enable":true}
+            ]`);
+
+            antiqueData.forEach(item => {
+                const cardDiv = document.createElement('div');
+                cardDiv.classList.add('col-md-4', 'mb-4');
+                cardDiv.innerHTML = `
+                    <div class="card">
+                        <img src="${item.image}" class="card-img-top" alt="${item.title}">
+                        <div class="card-body">
+                            <h5 class="card-title">${item.title}</h5>
+                            <p class="card-text">${item.description}</p>
+                            <a href="#" class="btn btn-primary ${item.enable ? '' : 'disabled'}">More Info</a>
+                        </div>
+                    </div>
+                `;
+                document.querySelector('.row').appendChild(cardDiv);
+            });
+        </script>
+
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

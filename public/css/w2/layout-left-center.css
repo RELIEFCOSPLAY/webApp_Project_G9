@@ -1,0 +1,46 @@
+body{
+    margin: 0;
+}
+
+.row{
+    display: flex;
+    /* flex-direction: row; */
+}
+
+.nav{
+    background-color: black;
+    flex: 2;
+    padding: 8px;
+}
+
+.content{
+    flex: 7;
+    padding-left: 16px;
+}
+
+.nav a{ /* เปลี่ยนสี a ใน class nav */
+    color: white;
+    text-decoration: none; /* เส้นใต้text */
+    display: block;
+}
+
+.nav a:hover{
+    color: orange;
+    background-color: black;
+}
+
+.footer{
+    margin: 16px;
+    text-align: center;
+    background-color: orange;
+    padding: 1px 0;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius:8px ;
+}
+
+/* จะเปลี่ยนจาก row เป็น column เมื่อหน้าจอมีขนาด 600 px */
+@media(max-width: 600px){
+    .row{
+        flex-direction: column;
+    }
+}

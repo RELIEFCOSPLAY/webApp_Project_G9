@@ -1,0 +1,30 @@
+/* ทำไห้มันเรียงเป็นblock */
+input, select{
+    display: block;
+    margin-bottom: 8px;
+    border-radius: 8px;
+}
+
+select{
+    margin-bottom: 16px;
+    padding: 5px 50px;
+}
+
+form{
+    background-color: #7ffcce;
+    padding: 2rem;
+    border-radius: 1rem;
+    border: #655f47;
+}
+
+button{
+    background-color: #fff0b3;
+    color: brown;
+    padding: 2rem;
+    /* border: none; */
+    border-radius: 1rem;
+}
+
+button:hover{
+    background-color: #655f47;
+}

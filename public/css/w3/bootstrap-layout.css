@@ -1,0 +1,45 @@
+#head {
+    background: url("/public/img/bg/bg-masthead.jpg") center center;
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+}
+
+i.intro {
+    font-size: 4rem;
+}
+
+div.row-intro {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+}
+
+#details1 {
+    background: url("/public/img/bg/bg-showcase-1.jpg");
+    background-size: cover;
+}
+
+#details2 {
+    background: url("/public/img/bg/bg-showcase-2.jpg");
+    background-size: cover;
+}
+
+.detail-img {
+    min-height: 25rem;
+}
+
+.avatar {
+    max-width: 9rem;
+}
+
+.sign-up {
+    position: relative;
+    background: url("/public/img/bg/bg-masthead.jpg") no-repeat center center;
+    background-size: cover;
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+}
+
+.footer {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}

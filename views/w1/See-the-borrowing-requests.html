@@ -110,13 +110,14 @@
                 <div class="text-primary h5 mt-3 mx-3">Approve or disapprove</div>
 
                 <!-- dropdown -->
-                <div class="dropdown ">
+                <div class="dropdown mt-3">
                     <select id="item-status" name="item-status" class="btn dropdown-toggle  bg-white"
                         onchange="readData();">
                         <option class="dropdown-item" value="all">All</option>
-                        <option class="dropdown-item" value="available">Available</option>
-                        <option class="dropdown-item" value="disabled">Disabled</option>
-                        <option class="dropdown-item" value="borrowed">Borrowed</option>
+                        <option class="dropdown-item" value="Approved">Approved</option>
+                        <option class="dropdown-item" value="Disapproved">Disapproved</option>
+                        <option class="dropdown-item" value="Pending">Pending</option>
+                        <option class="dropdown-item" value="RePending">RePending</option>
                     </select>
                 </div>
                 <!-- table tiem -->
@@ -124,6 +125,8 @@
                 <div id="tiem_list">
 
                 </div>
+                <!-- ======================================================== -->
+
                 <!-- ====================================================== -->
             </div>
         </div>
@@ -132,13 +135,7 @@
     </div>
 
     <script>
-        const demo = [
-            { id: 1, title: "item1", Status: "available" },
-            { id: 2, title: "item2", Status: "disabled" },
-            { id: 3, title: "item3", Status: "borrowed" },
-            { id: 4, title: "item4", Status: "available" },
-            { id: 5, title: "item5", Status: "disabled" },
-        ];
+
 
         //========================= Search Onclick =====================
         let search_t = '';
@@ -148,298 +145,391 @@
         }
 
         //----------  1. read function ------------------
-        function readData() {
-            var dropdown = document.getElementById("item-status");
-            var selectedValue = dropdown.options[dropdown.selectedIndex].value;
-            // document.getElementById("selectedValue").textContent = selectedValue;
-            var selectedStatus = selectedValue;
-            // alert(selectedValue);
-            // document.getElementById("selectedValue").textContent = selectedValue;
+        async function readData() {
+
+            try {
+                const response = await fetch('/approve');
+                if (response.ok) {
+                    const data = await response.json();
+                    var dropdown = document.getElementById("item-status");
+                    var selectedValue = dropdown.options[dropdown.selectedIndex].value;
+                    var selectedStatus = selectedValue;
+
+                    let product_d = '';
+
+                    data.forEach(function (p) {
+
+                        if (search_t === p.Borrowname) {
+                            if (selectedStatus === "all") {
+                                if (p.Status == "Approved") {
+                                    product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
+                                        <div class="text-primary h3">
+                                        <div class="d-flex ">
+                                        <img src="/public/img/bg/light-green.png" alt="avatar" width="50" height="50"
+                                        class="rounded-circle mx-1">
+                                        <p class="mx-3">${p.Borrowname}</p>
+                                        </div> 
+                                       <div class="d-flex justify-content-between mx-5">
+                                       <h4 class="me-2 ms-4">Status: </h4>
+                                       <h4 class="text-success">${p.Status}</h4>
+                                       </div>
+                                       </div>
+                                       <div class=" justify-content-between mt-4">
+                                      <button class="btn btn-success mx-3 btn-Approve" onclick=Approve(${JSON.stringify(p)})>Approve</button>
+                                      <button class="btn btn-danger mx-3 btn-Disapprove" onclick=Disapprove(${JSON.stringify(p)})>Disapprove</button>
+                                      </div>
+                                      </div>`;
+                                }
+                                else if (p.Status == "Disapproved") {
+                                    product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
+                                        <div class="text-primary h3">
+                                        <div class="d-flex ">
+                                        <img src="https://unsplash.it/400/200" alt="avatar" width="50" height="50"
+                                        class="rounded-circle mx-1">
+                                       <p class="mx-3">${p.Borrowname}</p>
+                                       </div>
+                                       <div class="d-flex justify-content-between mx-5">
+                                       <h4 class="me-2 ms-4">Status: </h4>
+                                       <h4 class="text-danger">${p.Status}</h4>
+                                       </div>
+                                       </div>
+                                       <div class=" justify-content-between mt-4">
+                                       <button class="btn btn-success mx-3 btn-Approve" onclick=Approve(${JSON.stringify(p)})>Approve</button>
+                                       <button class="btn btn-danger mx-3 btn-Disapprove" onclick=Disapprove(${JSON.stringify(p)})>Disapprove</button>
+                                       </div>
+                                       </div>`;
+                                }
+                                else if (p.Status == "Pending") {
+                                    product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
+                                  <div class="text-primary h3">
+                                  <div class="d-flex ">
+                                  <img src="https://unsplash.it/400/200" alt="avatar" width="50" height="50"
+                                  class="rounded-circle mx-1">
+                                  <p class="mx-3">${p.Borrowname}</p>
+                                  </div>
+                                  <div class="d-flex justify-content-between mx-5">
+                                  <h4 class="me-2 ms-4">Status: </h4>
+                                  <h4 class="text-warning">${p.Status}</h4>
+                                  </div>
+                                  </div>
+                                  <div class=" justify-content-between mt-4">
+                                  <button class="btn btn-success mx-3 btn-Approve" onclick=Approve(${JSON.stringify(p)})>Approve</button>
+                                  <button class="btn btn-danger mx-3 btn-Disapprove" onclick=Disapprove(${JSON.stringify(p)})>Disapprove</button>
+                                  </div>
+                                  </div>`;
+                                }
+                                else if (p.Status == "RePending") {
+                                    product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
+                                  <div class="text-primary h3">
+                                  <div class="d-flex ">
+                                  <img src="https://unsplash.it/400/200" alt="avatar" width="50" height="50"
+                                  class="rounded-circle mx-1">
+                                  <p class="mx-3">${p.Borrowname}</p>
+                                  </div>
+                                  <div class="d-flex justify-content-between mx-5">
+                                  <h4 class="me-2 ms-4">Status: </h4>
+                                  <h4 class="text-wprimary">${p.Status}</h4>
+                                  </div>
+                                  </div>
+                                  <div class=" justify-content-between mt-4">
+                                  <button class="btn btn-success mx-3 btn-Approve" onclick=Approve(${JSON.stringify(p)})>Approve</button>
+                                  <button class="btn btn-danger mx-3 btn-Disapprove" onclick=Disapprove(${JSON.stringify(p)})>Disapprove</button>
+                                  </div>
+                                  </div>`;
+                                }
+                                document.querySelector('#tiem_list').innerHTML = product_d;
 
 
-            let product_d = '';
-            for (p of demo) {
+                            }
 
-                if (search_t === p.title) {
-                    if (selectedStatus === "all") {
-                        if (p.Status == "available") {
-                            product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
-        <div class="text-primary h3">
-            <div class="d-flex ">
-                <img src="/public/img/bg/light-green.png" alt="avatar" width="50" height="50"
-                    class="rounded-circle mx-1">
-                <p class="mx-3">${p.title}</p>
-            </div>
-            <div class="d-flex justify-content-between mx-5">
-                <h4 class="me-2 ms-4">Status: </h4>
-                <h4 class="text-success">${p.Status}</h4>
-            </div>
-        </div>
-        <div class=" justify-content-between mt-4">
-            <button class="btn btn-success mx-3 btn-Approve" onclick="Approve(${p.id}, '${p.title}')">Approve</button>
-            <button class="btn btn-danger mx-3 btn-Disapprove" onclick="Disapprove(${p.id}, '${p.title}')">Disapprove</button>
-        </div>
-    </div>`;
-                        }
-                        else if (p.Status == "disabled") {
-                            product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
-        <div class="text-primary h3">
-            <div class="d-flex ">
-                <img src="https://unsplash.it/400/200" alt="avatar" width="50" height="50"
-                    class="rounded-circle mx-1">
-                <p class="mx-3">${p.title}</p>
-            </div>
-            <div class="d-flex justify-content-between mx-5">
-                <h4 class="me-2 ms-4">Status: </h4>
-                <h4 class="text-danger">${p.Status}</h4>
-            </div>
-        </div>
-        <div class=" justify-content-between mt-4">
-            <button class="btn btn-success mx-3 btn-Approve" onclick="Approve(${p.id}, '${p.title}')">Approve</button>
-            <button class="btn btn-danger mx-3 btn-Disapprove" onclick="Disapprove(${p.id}, '${p.title}')">Disapprove</button>
-        </div>
-    </div>`;
-                        }
-                        else if (p.Status == "borrowed") {
-                            product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
-        <div class="text-primary h3">
-            <div class="d-flex ">
-                <img src="https://unsplash.it/400/200" alt="avatar" width="50" height="50"
-                    class="rounded-circle mx-1">
-                <p class="mx-3">${p.title}</p>
-            </div>
-            <div class="d-flex justify-content-between mx-5">
-                <h4 class="me-2 ms-4">Status: </h4>
-                <h4 class="text-warning">${p.Status}</h4>
-            </div>
-        </div>
-        <div class=" justify-content-between mt-4">
-            <button class="btn btn-success mx-3 btn-Approve" onclick="Approve(${p.id}, '${p.title}')">Approve</button>
-            <button class="btn btn-danger mx-3 btn-Disapprove" onclick="Disapprove(${p.id}, '${p.title}')">Disapprove</button>
-        </div>
-    </div>`;
-                        }
-                        document.querySelector('#tiem_list').innerHTML = product_d;
-                    }
+                            if (selectedStatus === "Approved") {
+                                if (p.Status == "Approved") {
+                                    product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
+                                                <div class="text-primary h3">
+                                      <div class="d-flex ">
+                                      <img src="https://unsplash.it/400/200" alt="avatar" width="50" height="50"
+                                          class="rounded-circle mx-1">
+                                      <p class="mx-3">${p.Borrowname}</p>
+                                      </div>
+                                      <div class="d-flex justify-content-between mx-5">
+                                      <h4 class="me-2 ms-4">Status: </h4>
+                                      <h4 class="text-success">${p.Status}</h4>
+                                      </div>
+                                      </div>
+                                      <div class=" justify-content-between mt-4">
+                                      <button class="btn btn-success mx-3 btn-Approve" onclick=Approve(${JSON.stringify(p)})>Approve</button>
+                                      <button class="btn btn-danger mx-3 btn-Disapprove" onclick=Disapprove(${JSON.stringify(p)})>Disapprove</button>
+                                      </div>
+                                      </div>`;
+                                }
+                                document.querySelector('#tiem_list').innerHTML = product_d;
+                            }
 
-                    if (selectedStatus === "available") {
-                        if (p.Status == "available") {
-                            product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
-        <div class="text-primary h3">
-            <div class="d-flex ">
-                <img src="https://unsplash.it/400/200" alt="avatar" width="50" height="50"
-                    class="rounded-circle mx-1">
-                <p class="mx-3">${p.title}</p>
-            </div>
-            <div class="d-flex justify-content-between mx-5">
-                <h4 class="me-2 ms-4">Status: </h4>
-                <h4 class="text-success">${p.Status}</h4>
-            </div>
-        </div>
-        <div class=" justify-content-between mt-4">
-            <button class="btn btn-success mx-3 btn-Approve" onclick="Approve(${p.id}, '${p.title}')">Approve</button>
-            <button class="btn btn-danger mx-3 btn-Disapprove" onclick="Disapprove(${p.id}, '${p.title}')">Disapprove</button>
-        </div>
-    </div>`;
-                        }
-                        document.querySelector('#tiem_list').innerHTML = product_d;
-                    }
+                            if (selectedStatus === "Disapproved") {
+                                if (p.Status == "Disapproved") {
+                                    product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
+                                    <div class="text-primary h3">
+                                    <div class="d-flex ">
+                                    <img src="https://unsplash.it/400/200" alt="avatar" width="50" height="50"
+                                       class="rounded-circle mx-1">
+                                    <p class="mx-3">${p.Borrowname}</p>
+                                    </div>
+                                    <div class="d-flex justify-content-between mx-5">
+                                    <h4 class="me-2 ms-4">Status: </h4>
+                                    <h4 class="text-danger">${p.Status}</h4>
+                                    </div>
+                                    </div>
+                                    <div class=" justify-content-between mt-4">
+                                    <button class="btn btn-success mx-3 btn-Approve" onclick=Approve(${JSON.stringify(p)})>Approve</button>
+                                    <button class="btn btn-danger mx-3 btn-Disapprove" onclick=Disapprove(${JSON.stringify(p)})>Disapprove</button>
+                                    </div>
+                                    </div>`;
+                                }
+                                document.querySelector('#tiem_list').innerHTML = product_d;
+                            }
 
-                    if (selectedStatus === "disabled") {
-                        if (p.Status == "disabled") {
-                            product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
-        <div class="text-primary h3">
-            <div class="d-flex ">
-                <img src="https://unsplash.it/400/200" alt="avatar" width="50" height="50"
-                    class="rounded-circle mx-1">
-                <p class="mx-3">${p.title}</p>
-            </div>
-            <div class="d-flex justify-content-between mx-5">
-                <h4 class="me-2 ms-4">Status: </h4>
-                <h4 class="text-danger">${p.Status}</h4>
-            </div>
-        </div>
-        <div class=" justify-content-between mt-4">
-            <button class="btn btn-success mx-3 btn-Approve" onclick="Approve(${p.id}, '${p.title}')">Approve</button>
-            <button class="btn btn-danger mx-3 btn-Disapprove" onclick="Disapprove(${p.id}, '${p.title}')">Disapprove</button>
-        </div>
-    </div>`;
-                        }
-                        document.querySelector('#tiem_list').innerHTML = product_d;
-                    }
+                            if (selectedStatus === "Pending") {
+                                if (p.Status == "Pending") {
+                                    product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
+                                         <div class="text-primary h3">
+                                         <div class="d-flex ">
+                                         <img src="https://unsplash.it/400/200" alt="avatar" width="50" height="50"
+                                             class="rounded-circle mx-1">
+                                         <p class="mx-3">${p.Borrowname}</p>
+                                         </div>
+                                         <div class="d-flex justify-content-between mx-5">
+                                         <h4 class="me-2 ms-4">Status: </h4>
+                                         <h4 class="text-warning">${p.Status}</h4>
+                                         </div>
+                                         </div>
+                                         <div class=" justify-content-between mt-4">
+                                         <button class="btn btn-success mx-3 btn-Approve" onclick=Approve(${JSON.stringify(p)})>Approve</button>
+                                         <button class="btn btn-danger mx-3 btn-Disapprove" onclick=Disapprove(${JSON.stringify(p)})>Disapprove</button>
+                                         </div>
+                                         </div>`;
+                                }
+                                document.querySelector('#tiem_list').innerHTML = product_d;
 
-                    if (selectedStatus === "borrowed") {
-                        if (p.Status == "borrowed") {
-                            product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
-        <div class="text-primary h3">
-            <div class="d-flex ">
-                <img src="https://unsplash.it/400/200" alt="avatar" width="50" height="50"
-                    class="rounded-circle mx-1">
-                <p class="mx-3">${p.title}</p>
-            </div>
-            <div class="d-flex justify-content-between mx-5">
-                <h4 class="me-2 ms-4">Status: </h4>
-                <h4 class="text-warning">${p.Status}</h4>
-            </div>
-        </div>
-        <div class=" justify-content-between mt-4">
-            <button class="btn btn-success mx-3 btn-Approve" onclick="Approve(${p.id}, '${p.title}')">Approve</button>
-            <button class="btn btn-danger mx-3 btn-Disapprove" onclick="Disapprove(${p.id}, '${p.title}')">Disapprove</button>
-        </div>
-    </div>`;
+
+                            }
+
+                            if (selectedStatus === "RePending") {
+                                if (p.Status == "RePending") {
+                                    product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
+                                  <div class="text-primary h3">
+                                  <div class="d-flex ">
+                                  <img src="https://unsplash.it/400/200" alt="avatar" width="50" height="50"
+                                  class="rounded-circle mx-1">
+                                  <p class="mx-3">${p.Borrowname}</p>
+                                  </div>
+                                  <div class="d-flex justify-content-between mx-5">
+                                  <h4 class="me-2 ms-4">Status: </h4>
+                                  <h4 class="text-primary">${p.Status}</h4>
+                                  </div>
+                                  </div>
+                                  <div class=" justify-content-between mt-4">
+                                  <button class="btn btn-success mx-3 btn-Approve" onclick=Approve(${JSON.stringify(p)})>Approve</button>
+                                  <button class="btn btn-danger mx-3 btn-Disapprove" onclick=Disapprove(${JSON.stringify(p)})>Disapprove</button>
+                                  </div>
+                                  </div>`;
+                                }
+                            }
+                            document.querySelector('#tiem_list').innerHTML = product_d;
                         }
-                        document.querySelector('#tiem_list').innerHTML = product_d;
-                    }
+                        else if (search_t === "") {
+                            if (selectedStatus === "all") {
+                                if (p.Status == "Approved") {
+                                    product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
+                                   <div class="text-primary h3">
+                                   <div class="d-flex ">
+                                   <img src="https://unsplash.it/400/200" alt="avatar" width="50" height="50"
+                                       class="rounded-circle mx-1">
+                                   <p class="mx-3">${p.Borrowname}</p>
+                                   </div>
+                                   <div class="d-flex justify-content-between mx-5">
+                                   <h4 class="me-2 ms-4">Status: </h4>
+                                   <h4 class="text-success">${p.Status}</h4>
+                                   </div>
+                                   </div>
+                                   <div class=" justify-content-between mt-4">
+                                   <button class="btn btn-success mx-3 btn-Approve" onclick=Approve(${JSON.stringify(p)})>Approve</button>
+                                   <button class="btn btn-danger mx-3 btn-Disapprove" onclick=Disapprove(${JSON.stringify(p)})>Disapprove</button>
+                                   </div>
+                                   </div>`;
+                                }
+                                else if (p.Status == "Disapproved") {
+                                    product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
+                                        <div class="text-primary h3">
+                                        <div class="d-flex ">
+                                        <img src="https://unsplash.it/400/200" alt="avatar" width="50" height="50"
+                                            class="rounded-circle mx-1">
+                                        <p class="mx-3">${p.Borrowname}</p>
+                                        </div>
+                                        <div class="d-flex justify-content-between mx-5">
+                                        <h4 class="me-2 ms-4">Status: </h4>
+                                        <h4 class="text-danger">${p.Status}</h4>
+                                        </div>
+                                        </div>
+                                        <div class=" justify-content-between mt-4">
+                                        <button class="btn btn-success mx-3 btn-Approve" onclick=Approve(${JSON.stringify(p)})>Approve</button>
+                                        <button class="btn btn-danger mx-3 btn-Disapprove" onclick=Disapprove(${JSON.stringify(p)})>Disapprove</button>
+                                        </div>
+                                        </div>`;
+                                }
+                                else if (p.Status == "Pending") {
+                                    product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
+                                     <div class="text-primary h3">
+                                     <div class="d-flex ">
+                                     <img src="https://unsplash.it/400/200" alt="avatar" width="50" height="50"
+                                         class="rounded-circle mx-1">
+                                     <p class="mx-3">${p.Borrowname}</p>
+                                     </div>
+                                     <div class="d-flex justify-content-between mx-5">
+                                     <h4 class="me-2 ms-4">Status: </h4>
+                                     <h4 class="text-warning">${p.Status}</h4>
+                                     </div>
+                                     </div>
+                                     <div class=" justify-content-between mt-4">
+                                     <button class="btn btn-success mx-3 btn-Approve" onclick=Approve(${JSON.stringify(p)})>Approve</button>
+                                     <button class="btn btn-danger mx-3 btn-Disapprove" onclick=Disapprove(${JSON.stringify(p)})>Disapprove</button>
+                                     </div>
+                                     </div>`;
+                                }
+                                else if (p.Status == "RePending") {
+                                    product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
+                                  <div class="text-primary h3">
+                                  <div class="d-flex ">
+                                  <img src="https://unsplash.it/400/200" alt="avatar" width="50" height="50"
+                                  class="rounded-circle mx-1">
+                                  <p class="mx-3">${p.Borrowname}</p>
+                                  </div>
+                                  <div class="d-flex justify-content-between mx-5">
+                                  <h4 class="me-2 ms-4">Status: </h4>
+                                  <h4 class="text-wprimary">${p.Status}</h4>
+                                  </div>
+                                  </div>
+                                  <div class=" justify-content-between mt-4">
+                                  <button class="btn btn-success mx-3 btn-Approve" onclick=Approve(${JSON.stringify(p)})>Approve</button>
+                                  <button class="btn btn-danger mx-3 btn-Disapprove" onclick=Disapprove(${JSON.stringify(p)})>Disapprove</button>
+                                  </div>
+                                  </div>`;
+                                }
+                                document.querySelector('#tiem_list').innerHTML = product_d;
+                            }
+
+                            if (selectedStatus === "Approved") {
+                                if (p.Status == "Approved") {
+                                    product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
+                                    <div class="text-primary h3">
+                                    <div class="d-flex ">
+                                    <img src="https://unsplash.it/400/200" alt="avatar" width="50" height="50"
+                                        class="rounded-circle mx-1">
+                                    <p class="mx-3">${p.Borrowname}</p>
+                                    </div>
+                                    <div class="d-flex justify-content-between mx-5">
+                                    <h4 class="me-2 ms-4">Status: </h4>
+                                    <h4 class="text-success">${p.Status}</h4>
+                                    </div>
+                                    </div>
+                                    <div class=" justify-content-between mt-4">
+                                    <button class="btn btn-success mx-3 btn-Approve" onclick="Approve('${JSON.stringify(p)}')">Approve</button>
+                                    <button class="btn btn-danger mx-3 btn-Disapprove" onclick=Disapprove(${JSON.stringify(p)})>Disapprove</button>
+                                    </div>
+                                    </div>`;
+                                }
+                                document.querySelector('#tiem_list').innerHTML = product_d;
+                            }
+
+                            if (selectedStatus === "Disapproved") {
+                                if (p.Status == "Disapproved") {
+                                    product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
+                                  <div class="text-primary h3">
+                                  <div class="d-flex ">
+                                  <img src="https://unsplash.it/400/200" alt="avatar" width="50" height="50"
+                                      class="rounded-circle mx-1">
+                                  <p class="mx-3">${p.Borrowname}</p>
+                                  </div>
+                                  <div class="d-flex justify-content-between mx-5">
+                                  <h4 class="me-2 ms-4">Status: </h4>
+                                  <h4 class="text-danger">${p.Status}</h4>
+                                  </div>
+                                  </div>
+                                  <div class=" justify-content-between mt-4">
+                                  <button class="btn btn-success mx-3 btn-Approve" onclick=Approve(${JSON.stringify(p)})>Approve</button>
+                                  <button class="btn btn-danger mx-3 btn-Disapprove" onclick=Disapprove(${JSON.stringify(p)})>Disapprove</button>
+                                  </div>
+                                  </div>`;
+                                }
+                                document.querySelector('#tiem_list').innerHTML = product_d;
+                            }
+
+                            if (selectedStatus === "Pending") {
+                                if (p.Status == "Pending") {
+                                    product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
+                                    <div class="text-primary h3">
+                                    <div class="d-flex ">
+                                    <img src="https://unsplash.it/400/200" alt="avatar" width="50" height="50"
+                                    class="rounded-circle mx-1">
+                                     <p class="mx-3">${p.Borrowname}</p>
+                                      </div>
+                                       <div class="d-flex justify-content-between mx-5">
+                                       <h4 class="me-2 ms-4">Status: </h4>
+                                       <h4 class="text-warning">${p.Status}</h4>
+                                       </div>
+                                       </div>
+                                      <div class=" justify-content-between mt-4">
+                                        <button class="btn btn-success mx-3 btn-Approve" onclick=Approve(${JSON.stringify(p)})>Approve</button>
+                                      <button class="btn btn-danger mx-3 btn-Disapprove" onclick=Disapprove(${JSON.stringify(p)})>Disapprove</button>
+                                     </div>
+                                      </div>`;
+                                }
+                                document.querySelector('#tiem_list').innerHTML = product_d;
+
+                            }
+                            if (selectedStatus === "RePending") {
+                                if (p.Status == "RePending") {
+                                    product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
+                                  <div class="text-primary h3">
+                                  <div class="d-flex ">
+                                  <img src="https://unsplash.it/400/200" alt="avatar" width="50" height="50"
+                                  class="rounded-circle mx-1">
+                                  <p class="mx-3">${p.Borrowname}</p>
+                                  </div>
+                                  <div class="d-flex justify-content-between mx-5">
+                                  <h4 class="me-2 ms-4">Status: </h4>
+                                  <h4 class="text-primary">${p.Status}</h4>
+                                  </div>
+                                  </div>
+                                  <div class=" justify-content-between mt-4">
+                                  <button class="btn btn-success mx-3 btn-Approve" onclick=Approve(${JSON.stringify(p)})>Approve</button>
+                                  <button class="btn btn-danger mx-3 btn-Disapprove" onclick=Disapprove(${JSON.stringify(p)})>Disapprove</button>
+                                  </div>
+                                  </div>`;
+                                }
+                            }
+                            document.querySelector('#tiem_list').innerHTML = product_d;
+                        }
+                    });
+                } else if (response.status == 500) {
+                    const data = response.text();
+                    throw Error(data);
                 }
-                else if (search_t === "") {
-                    if (selectedStatus === "all") {
-                        if (p.Status == "available") {
-                            product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
-        <div class="text-primary h3">
-            <div class="d-flex ">
-                <img src="https://unsplash.it/400/200" alt="avatar" width="50" height="50"
-                    class="rounded-circle mx-1">
-                <p class="mx-3">${p.title}</p>
-            </div>
-            <div class="d-flex justify-content-between mx-5">
-                <h4 class="me-2 ms-4">Status: </h4>
-                <h4 class="text-success">${p.Status}</h4>
-            </div>
-        </div>
-        <div class=" justify-content-between mt-4">
-            <button class="btn btn-success mx-3 btn-Approve" onclick="Approve(${p.id}, '${p.title}')">Approve</button>
-            <button class="btn btn-danger mx-3 btn-Disapprove" onclick="Disapprove(${p.id}, '${p.title}')">Disapprove</button>
-        </div>
-    </div>`;
-                        }
-                        else if (p.Status == "disabled") {
-                            product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
-        <div class="text-primary h3">
-            <div class="d-flex ">
-                <img src="https://unsplash.it/400/200" alt="avatar" width="50" height="50"
-                    class="rounded-circle mx-1">
-                <p class="mx-3">${p.title}</p>
-            </div>
-            <div class="d-flex justify-content-between mx-5">
-                <h4 class="me-2 ms-4">Status: </h4>
-                <h4 class="text-danger">${p.Status}</h4>
-            </div>
-        </div>
-        <div class=" justify-content-between mt-4">
-            <button class="btn btn-success mx-3 btn-Approve" onclick="Approve(${p.id}, '${p.title}')">Approve</button>
-            <button class="btn btn-danger mx-3 btn-Disapprove" onclick="Disapprove(${p.id}, '${p.title}')">Disapprove</button>
-        </div>
-    </div>`;
-                        }
-                        else if (p.Status == "borrowed") {
-                            product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
-        <div class="text-primary h3">
-            <div class="d-flex ">
-                <img src="https://unsplash.it/400/200" alt="avatar" width="50" height="50"
-                    class="rounded-circle mx-1">
-                <p class="mx-3">${p.title}</p>
-            </div>
-            <div class="d-flex justify-content-between mx-5">
-                <h4 class="me-2 ms-4">Status: </h4>
-                <h4 class="text-warning">${p.Status}</h4>
-            </div>
-        </div>
-        <div class=" justify-content-between mt-4">
-            <button class="btn btn-success mx-3 btn-Approve" onclick="Approve(${p.id}, '${p.title}')">Approve</button>
-            <button class="btn btn-danger mx-3 btn-Disapprove" onclick="Disapprove(${p.id}, '${p.title}')">Disapprove</button>
-        </div>
-    </div>`;
-                        }
-                        document.querySelector('#tiem_list').innerHTML = product_d;
-                    }
-
-                    if (selectedStatus === "available") {
-                        if (p.Status == "available") {
-                            product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
-        <div class="text-primary h3">
-            <div class="d-flex ">
-                <img src="https://unsplash.it/400/200" alt="avatar" width="50" height="50"
-                    class="rounded-circle mx-1">
-                <p class="mx-3">${p.title}</p>
-            </div>
-            <div class="d-flex justify-content-between mx-5">
-                <h4 class="me-2 ms-4">Status: </h4>
-                <h4 class="text-success">${p.Status}</h4>
-            </div>
-        </div>
-        <div class=" justify-content-between mt-4">
-            <button class="btn btn-success mx-3 btn-Approve" onclick="Approve(${p.id}, '${p.title}')">Approve</button>
-            <button class="btn btn-danger mx-3 btn-Disapprove" onclick="Disapprove(${p.id}, '${p.title}')">Disapprove</button>
-        </div>
-    </div>`;
-                        }
-                        document.querySelector('#tiem_list').innerHTML = product_d;
-                    }
-
-                    if (selectedStatus === "disabled") {
-                        if (p.Status == "disabled") {
-                            product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
-        <div class="text-primary h3">
-            <div class="d-flex ">
-                <img src="https://unsplash.it/400/200" alt="avatar" width="50" height="50"
-                    class="rounded-circle mx-1">
-                <p class="mx-3">${p.title}</p>
-            </div>
-            <div class="d-flex justify-content-between mx-5">
-                <h4 class="me-2 ms-4">Status: </h4>
-                <h4 class="text-danger">${p.Status}</h4>
-            </div>
-        </div>
-        <div class=" justify-content-between mt-4">
-            <button class="btn btn-success mx-3 btn-Approve" onclick="Approve(${p.id}, '${p.title}')">Approve</button>
-            <button class="btn btn-danger mx-3 btn-Disapprove" onclick="Disapprove(${p.id}, '${p.title}')">Disapprove</button>
-        </div>
-    </div>`;
-                        }
-                        document.querySelector('#tiem_list').innerHTML = product_d;
-                    }
-
-                    if (selectedStatus === "borrowed") {
-                        if (p.Status == "borrowed") {
-                            product_d += `<div class="d-flex justify-content-between rounded bg-white py-2 px-2 my-2">
-        <div class="text-primary h3">
-            <div class="d-flex ">
-                <img src="https://unsplash.it/400/200" alt="avatar" width="50" height="50"
-                    class="rounded-circle mx-1">
-                <p class="mx-3">${p.title}</p>
-            </div>
-            <div class="d-flex justify-content-between mx-5">
-                <h4 class="me-2 ms-4">Status: </h4>
-                <h4 class="text-warning">${p.Status}</h4>
-            </div>
-        </div>
-        <div class=" justify-content-between mt-4">
-            <button class="btn btn-success mx-3 btn-Approve" onclick="Approve(${p.id}, '${p.title}')">Approve</button>
-            <button class="btn btn-danger mx-3 btn-Disapprove" onclick="Disapprove(${p.id}, '${p.title}')">Disapprove</button>
-        </div>
-    </div>`;
-                        }
-                        document.querySelector('#tiem_list').innerHTML = product_d;
-                    }
-                }
-
-
+            }
+            catch (err) {
+                console.error(err.message);
+                Notiflix.Report.failure('Error', err.message, 'Close');
             }
             // Approve();
             // Disapprove();
         }
 
-        //----------  2. Approve function ------------------
-        function Approve(id, title) {
-            // selest all delete buttons
-            // const btnDelete = document.querySelectorAll('.btn-Approve');
-            // bind onclick event to each delete buttons
-            // btnDelete.forEach(function (btn) {
-            //     btn.onclick = function () {
-            //         // readData();
 
-            //     }
-            // });
+        //--------------------------------------------------------------------------------------------------
+
+        //--------------------------------------------------------------------------------------------------
+        //----------  2. Approve function ------------------
+        function Approve(p) {
+
             //=========================================
             const swalWithBootstrapButtons = Swal.mixin({
                 customClass: {
@@ -451,7 +541,7 @@
             // ---------- alert pop up ---------------
             swalWithBootstrapButtons.fire({
                 title: 'Are you sure Approve?',
-                text: `Name: ${title}`,
+                text: `Name: ${p.Borrowname}`,
                 imageUrl: 'https://unsplash.it/400/200',
                 imageWidth: 400,
                 imageHeight: 200,
@@ -481,17 +571,11 @@
         }
 
         //----------  3. Disapprove function ------------------
-        function Disapprove(id, title) {
+        function Disapprove(p) {
+           
+            editID = id;
+            productModal.show();
 
-            // selest all delete buttons
-            // const btnDelete = document.querySelectorAll('.btn-Disapprove');
-            // bind onclick event to each delete buttons
-            // readData();
-            // btnDelete.forEach(function (btn) {
-            //     btn.onclick = function () {
-
-            //     }
-            // });
             const swalWithBootstrapButtons = Swal.mixin({
                 customClass: {
                     confirmButton: 'btn btn-success mx-2',
@@ -502,7 +586,7 @@
             // ---------- alert pop up ---------------
             swalWithBootstrapButtons.fire({
                 title: 'Are you sure Disapprove?',
-                text: `Name: ${title}`,
+                text: `Name: ${p.Borrowname}`,
                 input: 'text',
                 inputAttributes: {
                     autocapitalize: 'off'
@@ -516,13 +600,26 @@
                 confirmButtonText: 'Disapprove',
                 cancelButtonText: 'Cancel',
                 // reverseButtons: true
+
             }).then((result) => {
+
                 if (result.isConfirmed) {
-                    swalWithBootstrapButtons.fire(
-                        'Success',
-                        'Your has been Disapprove.',
-                        'success'
-                    );
+                    url = `/approve/${editID}`;
+                    httpMethod = 'PUT';
+                    bodyContent = JSON.stringify(
+                        {});
+                    fetch(url, {
+                        method: httpMethod,
+                        headers: { "Content-Type": "application/json" },
+                        body: bodyContent
+                    }).then((result) => {
+                        swalWithBootstrapButtons.fire(
+                            'Success',
+                            'Your has been Disapprove.',
+                            'success'
+                        );
+                    });
+
                     readData();
                 } else if (
                     /* Read more about handling dismissals below */
@@ -574,19 +671,19 @@
         // }
         readData();
         //========================= Borrowing_requests Onclick =====================
-        document.querySelector('#Borrowing_requests').onclick = function () {
-            window.location.replace('Lecturer_asset _ist.html');
-        }
-        //========================= Approve_or_disapprove Onclick =====================
-        document.querySelector('#Approve_or_disapprove').onclick = function () {
-            window.location.replace('See-the-borrowing-requests.html');
-        }
+        // document.querySelector('#Borrowing_requests').onclick = function () {
+        //     window.location.replace('Lecturer_asset _ist.html');
+        // }
+        // //========================= Approve_or_disapprove Onclick =====================
+        // document.querySelector('#Approve_or_disapprove').onclick = function () {
+        //     window.location.replace('See-the-borrowing-requests.html');
+        // }
 
-        document.querySelector('#dashboard').onclick = function () {
-            window.location.replace('dashboard.html');
-            
-        }
-        readData();
+        // document.querySelector('#dashboard').onclick = function () {
+        //     window.location.replace('dashboard.html');
+
+        // }
+        // readData();
     </script>
 </body>
 
